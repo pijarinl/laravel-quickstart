@@ -11,7 +11,7 @@ class TaskStore extends ReduceStore{
 			ready: false,
 			items: [],
 			task: "",
-
+			idRandom: "",
 		}
 	}
 	reduce(state, action){
@@ -30,8 +30,9 @@ class TaskStore extends ReduceStore{
  			}
  			case ActionTypes.GET_NEWTASK : {
  				console.log(action.payload.task)
+ 				state.idRandom = Math.random()
  				return update(state, {
- 					items: {$push: [{id: Math.random(), name: action.payload.task}]}
+ 					items: {$push: [{id: state.idRandom, name: action.payload.task}]}
  				})
  			}
  			case ActionTypes.CHANGE_TASK : {
@@ -40,10 +41,16 @@ class TaskStore extends ReduceStore{
 	 			})
 	 		}
  			case ActionTypes.GET_NEWTASK_SUCCESS : {
- 				var items = state.items;
+				var index = state.items.findIndex(item => item.id == state.idRandom)
+ 				// var items = state.items;
  				//ต้องหาชื่อมาให้ตรงกันแล้วแก้ ID
+ 		// 		[index]: {
+			// 	name: {$set: newTask}
+			// }
+			console.log(action.payload.response.task.id)
  				return update(state,{
- 					items:{$merge: action.payload.response.task},
+ 					items:{
+ 						[index]:{id:{$set: action.payload.response.task.id}}},
  				})
  			}
  			default:

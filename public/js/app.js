@@ -11241,6 +11241,8 @@ var AppDispatcher = function (_Dispatcher) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__ = __webpack_require__(161);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -11269,8 +11271,8 @@ var TaskStore = function (_ReduceStore) {
       return {
         ready: false,
         items: [],
-        task: ""
-
+        task: "",
+        idRandom: ""
       };
     }
   }, {
@@ -11291,8 +11293,9 @@ var TaskStore = function (_ReduceStore) {
         case __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__["a" /* default */].GET_NEWTASK:
           {
             console.log(action.payload.task);
+            state.idRandom = Math.random();
             return __WEBPACK_IMPORTED_MODULE_1_immutability_helper___default()(state, {
-              items: { $push: [{ id: Math.random(), name: action.payload.task }] }
+              items: { $push: [{ id: state.idRandom, name: action.payload.task }] }
             });
           }
         case __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__["a" /* default */].CHANGE_TASK:
@@ -11303,10 +11306,17 @@ var TaskStore = function (_ReduceStore) {
           }
         case __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__["a" /* default */].GET_NEWTASK_SUCCESS:
           {
-            var items = state.items;
+            var index = state.items.findIndex(function (item) {
+              return item.id == state.idRandom;
+            }
+            // var items = state.items;
             //ต้องหาชื่อมาให้ตรงกันแล้วแก้ ID
+            // 		[index]: {
+            // 	name: {$set: newTask}
+            // }
+            );console.log(action.payload.response.task.id);
             return __WEBPACK_IMPORTED_MODULE_1_immutability_helper___default()(state, {
-              items: { $merge: action.payload.response.task }
+              items: _defineProperty({}, index, { id: { $set: action.payload.response.task.id } })
             });
           }
         default:
@@ -34728,7 +34738,6 @@ var TodoContainer = function (_Component) {
 				todos: this.state.storeState.items,
 				task: this.state.storeState.task
 			});
-
 			return content;
 		}
 	}]);

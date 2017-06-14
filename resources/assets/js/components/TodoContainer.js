@@ -14,7 +14,6 @@ class TodoContainer extends Component {
 			todos: this.state.storeState.items,
 			task: this.state.storeState.task,
 		});
-
 		return content;
 	}
 }
