@@ -16,4 +16,6 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth:api'], function () {
 	Route::get('/tasks','TaskApiController@index');
 	Route::post('/task','TaskApiController@create');
+	Route::post('/task/{taskId}/delete', 'TaskApiController@destroy');
+
 });

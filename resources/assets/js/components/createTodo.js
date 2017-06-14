@@ -32,18 +32,12 @@ class createTodo extends React.Component{
 
 	onChange(e){
 		TaskActions.onTaskChange(e.target.value);
-		console.log(this.props.task)
 
 
 	}
 	removeTask(taskId){
-		var items = this.state.items;
-		items = items.filter(function(eT){
-			return eT.id !==taskId;
-		});
-
-		this.setState({items});
-		return;
+		TaskActions.deleteTask(taskId);
+		 return;
 	}
 
 	saveTask(idTask,newTask){
@@ -64,7 +58,7 @@ class createTodo extends React.Component{
 				
 				<form onSubmit={this.addTask} className="form-horizontal">
 					<label  className="col-sm-3 control-label"> Task </label>
-					<input onChange={this.onChange} className="form-control"/>
+					<input onChange={this.onChange} value = {this.props.task} className="form-control"/>
 					<button className="btn btn-default fa fa-plus">Add Task</button>
 				</form>
 

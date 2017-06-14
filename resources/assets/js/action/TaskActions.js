@@ -24,6 +24,13 @@ let TaskActions = {
      		failure: ActionTypes.GET_NEWTASK_ERROR
 		}, {task});
 	},
+	deleteTask(taskId){
+		AppDispatcher.dispatchAsync(TaskAPI.deleteTask(taskId),{
+			request: ActionTypes.DELETE_TASK,
+      		success: ActionTypes.DELETE_TASK_SUCCESS,
+     		failure: ActionTypes.DELETE_TASK_ERROR
+		}, {taskId});
+	}
 }
 
 export default TaskActions;

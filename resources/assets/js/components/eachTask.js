@@ -32,7 +32,6 @@ export default class EachTask extends React.Component{
 	onDeleteTask(){
 
 		var taskId = this.props.itemId;
-		console.log(taskId)
 		this.props.removeTask(taskId);
 	}
 

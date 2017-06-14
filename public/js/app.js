@@ -11090,6 +11090,13 @@ var TaskActions = {
 			success: __WEBPACK_IMPORTED_MODULE_2__constants_ActionTypes__["a" /* default */].GET_NEWTASK_SUCCESS,
 			failure: __WEBPACK_IMPORTED_MODULE_2__constants_ActionTypes__["a" /* default */].GET_NEWTASK_ERROR
 		}, { task: task });
+	},
+	deleteTask: function deleteTask(taskId) {
+		__WEBPACK_IMPORTED_MODULE_0__dispatcher__["a" /* default */].dispatchAsync(__WEBPACK_IMPORTED_MODULE_1__api_TaskAPI__["a" /* default */].deleteTask(taskId), {
+			request: __WEBPACK_IMPORTED_MODULE_2__constants_ActionTypes__["a" /* default */].DELETE_TASK,
+			success: __WEBPACK_IMPORTED_MODULE_2__constants_ActionTypes__["a" /* default */].DELETE_TASK_SUCCESS,
+			failure: __WEBPACK_IMPORTED_MODULE_2__constants_ActionTypes__["a" /* default */].DELETE_TASK_ERROR
+		}, { taskId: taskId });
 	}
 };
 
@@ -11295,7 +11302,8 @@ var TaskStore = function (_ReduceStore) {
             console.log(action.payload.task);
             state.idRandom = Math.random();
             return __WEBPACK_IMPORTED_MODULE_1_immutability_helper___default()(state, {
-              items: { $push: [{ id: state.idRandom, name: action.payload.task }] }
+              items: { $push: [{ id: state.idRandom, name: action.payload.task }] },
+              task: { $set: ' ' }
             });
           }
         case __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__["a" /* default */].CHANGE_TASK:
@@ -11308,15 +11316,26 @@ var TaskStore = function (_ReduceStore) {
           {
             var index = state.items.findIndex(function (item) {
               return item.id == state.idRandom;
-            }
-            // var items = state.items;
-            //ต้องหาชื่อมาให้ตรงกันแล้วแก้ ID
-            // 		[index]: {
-            // 	name: {$set: newTask}
-            // }
-            );console.log(action.payload.response.task.id);
+            });
             return __WEBPACK_IMPORTED_MODULE_1_immutability_helper___default()(state, {
-              items: _defineProperty({}, index, { id: { $set: action.payload.response.task.id } })
+              items: _defineProperty({}, index, { id: { $set: action.payload.response.task.id } }),
+              task: { $set: ' ' }
+            });
+          }
+        case __WEBPACK_IMPORTED_MODULE_4__constants_ActionTypes__["a" /* default */].DELETE_TASK:
+          {
+
+            // 	console.log('Id : '+action.payload.taskId)
+            // var index = state.items.findIndex(item => item.id == action.payload.taskId)
+
+            var items = state.items.filter(function (eT) {
+              return eT.id !== action.payload.taskId;
+            });
+
+            return __WEBPACK_IMPORTED_MODULE_1_immutability_helper___default()(state, {
+              items: {
+                $set: items
+              }
             });
           }
         default:
@@ -34413,6 +34432,11 @@ var TaskAPI = {
 
 		var postUrl = API_URL + '/task';
 		return __WEBPACK_IMPORTED_MODULE_2__API__["a" /* default */].postInfo(postUrl, JSON.stringify({ task: task }));
+	},
+	deleteTask: function deleteTask(taskId) {
+
+		var postUrl = API_URL + '/task/' + taskId + '/delete';
+		return __WEBPACK_IMPORTED_MODULE_2__API__["a" /* default */].postInfo(postUrl, null);
 	}
 };
 /* harmony default export */ __webpack_exports__["a"] = (TaskAPI);
@@ -35142,17 +35166,11 @@ var createTodo = function (_React$Component) {
 		key: 'onChange',
 		value: function onChange(e) {
 			__WEBPACK_IMPORTED_MODULE_5__action_TaskActions__["a" /* default */].onTaskChange(e.target.value);
-			console.log(this.props.task);
 		}
 	}, {
 		key: 'removeTask',
 		value: function removeTask(taskId) {
-			var items = this.state.items;
-			items = items.filter(function (eT) {
-				return eT.id !== taskId;
-			});
-
-			this.setState({ items: items });
+			__WEBPACK_IMPORTED_MODULE_5__action_TaskActions__["a" /* default */].deleteTask(taskId);
 			return;
 		}
 	}, {
@@ -35187,7 +35205,7 @@ var createTodo = function (_React$Component) {
 						{ className: 'col-sm-3 control-label' },
 						' Task '
 					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.onChange, className: 'form-control' }),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.onChange, value: this.props.task, className: 'form-control' }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						'button',
 						{ className: 'btn btn-default fa fa-plus' },
@@ -35333,7 +35351,6 @@ var EachTask = function (_React$Component) {
 		value: function onDeleteTask() {
 
 			var taskId = this.props.itemId;
-			console.log(taskId);
 			this.props.removeTask(taskId);
 		}
 	}, {

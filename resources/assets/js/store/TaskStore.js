@@ -32,7 +32,8 @@ class TaskStore extends ReduceStore{
  				console.log(action.payload.task)
  				state.idRandom = Math.random()
  				return update(state, {
- 					items: {$push: [{id: state.idRandom, name: action.payload.task}]}
+ 					items: {$push: [{id: state.idRandom, name: action.payload.task}]},
+ 					task: {$set: ' '},
  				})
  			}
  			case ActionTypes.CHANGE_TASK : {
@@ -42,15 +43,25 @@ class TaskStore extends ReduceStore{
 	 		}
  			case ActionTypes.GET_NEWTASK_SUCCESS : {
 				var index = state.items.findIndex(item => item.id == state.idRandom)
- 				// var items = state.items;
- 				//ต้องหาชื่อมาให้ตรงกันแล้วแก้ ID
- 		// 		[index]: {
-			// 	name: {$set: newTask}
-			// }
-			console.log(action.payload.response.task.id)
  				return update(state,{
  					items:{
  						[index]:{id:{$set: action.payload.response.task.id}}},
+ 					task: {$set: ' '},
+ 				})
+ 			}
+ 			case ActionTypes.DELETE_TASK : {
+
+ 			// 	console.log('Id : '+action.payload.taskId)
+				// var index = state.items.findIndex(item => item.id == action.payload.taskId)
+ 				
+				var items = state.items.filter(function(eT){
+					return eT.id !==action.payload.taskId;
+				});
+
+ 				return update(state,{
+ 					items:{
+ 						$set: items
+ 					}
  				})
  			}
  			default:

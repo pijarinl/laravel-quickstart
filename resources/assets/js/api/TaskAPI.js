@@ -22,5 +22,10 @@ let TaskAPI = {
 		var postUrl = `${API_URL}/task`;
     	return API.postInfo(postUrl, JSON.stringify({task}));
 	},
+	deleteTask(taskId){
+
+		var postUrl = `${API_URL}/task/${taskId}/delete`;
+   	 	return API.postInfo(postUrl, null);
+	}
 }
 export default TaskAPI;
