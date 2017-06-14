@@ -12,6 +12,7 @@ class TodoContainer extends Component {
 		let content = this.props.children && React.cloneElement(this.props.children, {
 			ready: this.state.storeState.ready,
 			todos: this.state.storeState.items,
+			task: this.state.storeState.task,
 		});
 
 		return content;

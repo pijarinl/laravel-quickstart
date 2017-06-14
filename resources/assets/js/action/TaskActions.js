@@ -10,7 +10,20 @@ let TaskActions = {
       		success: ActionTypes.GET_TASK_SUCCESS,
      		failure: ActionTypes.GET_TASK_ERROR
 		});
-	}
+	},
+	onTaskChange(value){
+		AppDispatcher.dispatch({
+			type:ActionTypes.CHANGE_TASK,
+			payload:{value}
+		});
+	},
+	putNewTask(task){
+		AppDispatcher.dispatchAsync(TaskAPI.putTask(task),{
+			request: ActionTypes.GET_NEWTASK,
+      		success: ActionTypes.GET_NEWTASK_SUCCESS,
+     		failure: ActionTypes.GET_NEWTASK_ERROR
+		}, {task});
+	},
 }
 
 export default TaskActions;

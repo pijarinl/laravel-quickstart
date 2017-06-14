@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Task;
 use Log;
+use Auth;
 
 class TaskApiController extends Controller
 {
@@ -33,17 +34,17 @@ class TaskApiController extends Controller
     public function create(Request $request)
     {
         //
-        Log::info(print_r($request->all(), true));
+        $id = Auth::guard('api')->user()->id;
+        Log::info($id);
 
-        $task = $request->input("task");
-
-        // Task::create([
-        //     'user_id' => $task.id,
-        //     'name' => $task.name
-        //     ]);
+        $input = $request->input("task");
+        $task = new Task;
+        $task->name = $input;
+        $task->user_id = $id;
+        $task->save();
 
         return response()->json([
-            'tasks' => $task
+            'task' => $task
         ]);
     }
 

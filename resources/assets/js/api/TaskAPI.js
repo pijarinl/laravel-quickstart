@@ -16,6 +16,11 @@ let TaskAPI = {
 		var getUrl = `${API_URL}/tasks`;
 		
 		return API.getInfo(getUrl);
-	}
+	},
+	putTask(task){
+
+		var postUrl = `${API_URL}/task`;
+    	return API.postInfo(postUrl, JSON.stringify({task}));
+	},
 }
 export default TaskAPI;

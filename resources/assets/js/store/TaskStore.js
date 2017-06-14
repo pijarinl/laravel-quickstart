@@ -10,6 +10,7 @@ class TaskStore extends ReduceStore{
 		return{
 			ready: false,
 			items: [],
+			task: "",
 
 		}
 	}
@@ -27,7 +28,24 @@ class TaskStore extends ReduceStore{
  					}
  				);
  			}
- 			
+ 			case ActionTypes.GET_NEWTASK : {
+ 				console.log(action.payload.task)
+ 				return update(state, {
+ 					items: {$push: [{id: Math.random(), name: action.payload.task}]}
+ 				})
+ 			}
+ 			case ActionTypes.CHANGE_TASK : {
+	 			return update(state,{
+	 				task: {$set: action.payload.value},
+	 			})
+	 		}
+ 			case ActionTypes.GET_NEWTASK_SUCCESS : {
+ 				var items = state.items;
+ 				//ต้องหาชื่อมาให้ตรงกันแล้วแก้ ID
+ 				return update(state,{
+ 					items:{$merge: action.payload.response.task},
+ 				})
+ 			}
  			default:
  				return state;
 		}

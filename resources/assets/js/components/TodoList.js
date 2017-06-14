@@ -11,7 +11,6 @@ class TodoList extends Component {
 		this.props.removeTask(taskId);
 	}
 	renderItems(){
-		console.log(this.props.items)
 
 		return this.props.items.map((item) => 
 			<TodoEach key={item.id} itemName ={item.name} itemId={item.id}

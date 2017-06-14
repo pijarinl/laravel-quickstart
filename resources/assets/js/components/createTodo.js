@@ -11,42 +11,29 @@ import TaskStore from '../store/TaskStore';
 class createTodo extends React.Component{
 
 	constructor(props) {
-	 	super(props);
-	 	
-	 	this.state = {
-	 		
-	 		items: this.props.todos,
-	 		task : ''
-	 	}
 
+	 	super(props);
 	 	this.onChange = this.onChange.bind(this);
 	 	this.addTask = this.addTask.bind(this);
 	 	this.removeTask = this.removeTask.bind(this);
 	 	this.saveTask = this.saveTask.bind(this);
-	 	this.getTaskAPI = this.getTaskAPI.bind(this);
 	 };
 
 
-	addTask(taskName, event){
-
+	addTask(event){
 		event.preventDefault();
 
-		if(!taskName){
+		if(!this.props.task){
 			return;
 		}
-		var items = this.state.items;
-		var id = Math.random();
-		items = items.concat([{id,taskName}]);
-
-		var task = '';
-
-		this.setState({items,task});
+		TaskActions.putNewTask(this.props.task)
 
 	}
 
 	onChange(e){
+		TaskActions.onTaskChange(e.target.value);
+		console.log(this.props.task)
 
-		this.setState({task: e.target.value});
 
 	}
 	removeTask(taskId){
@@ -61,19 +48,11 @@ class createTodo extends React.Component{
 
 	saveTask(idTask,newTask){
 		var index = this.state.items.findIndex(item => item.id == idTask)
-		// item.taskName = newTask;
 		this.setState({items: update(this.state.items, {
 			[index]: {
 				name: {$set: newTask}
 			}
 		})})
-	}
-	getTaskAPI(){
-		var items = this.state.items;
-
-		items = this.props.todos;
-		this.setState({items});
-
 	}
 	render(){
 		if(!this.props.ready){
@@ -83,20 +62,19 @@ class createTodo extends React.Component{
 		return(
 			<div className="form-group">
 				
-				<form onSubmit={this.addTask.bind('this', this.state.task)} className="form-horizontal">
+				<form onSubmit={this.addTask} className="form-horizontal">
 					<label  className="col-sm-3 control-label"> Task </label>
-					<input onChange={this.onChange} value={this.state.task} className="form-control"/>
+					<input onChange={this.onChange} className="form-control"/>
 					<button className="btn btn-default fa fa-plus">Add Task</button>
 				</form>
-				
- 				<button className="btn btn-default fa fa-plus" onClick = {this.getTaskAPI} >API Task</button>
+
 
 				<div className = "panel panel-default">
 					<div className="panel-heading">
                    	 	Current Tasks
                 	</div>
                 	<div className="panel-body">
-						<TodoList items={this.state.items}
+						<TodoList items={this.props.todos}
 							removeTask={this.removeTask} 
 							saveTask={this.saveTask}/>
 					</div>
